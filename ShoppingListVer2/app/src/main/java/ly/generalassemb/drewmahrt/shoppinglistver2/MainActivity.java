@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     public void handleIntent(Intent intent){
         if(Intent.ACTION_SEARCH.equals(intent.getAction())){
             String query = intent.getStringExtra(SearchManager.QUERY);
-            List<GroceryItem> list = mHelper.searchItemByName(query);
+            List<GroceryItem> list = mHelper.searchItemByNameOrType(query);
             mGroceryViewAdapter.replaceData(list);
         }
     }

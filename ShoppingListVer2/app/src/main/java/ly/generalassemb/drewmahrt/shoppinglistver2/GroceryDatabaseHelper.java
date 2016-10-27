@@ -70,13 +70,13 @@ public class GroceryDatabaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    public List<GroceryItem> searchItemByName(String name) {
+    public List<GroceryItem> searchItemByNameOrType(String name) {
         LinkedList<GroceryItem> list = new LinkedList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(GROCERY_TABLE_NAME,
                 null,
                 COL_NAME + " LIKE ? OR " + COL_TYPE + " LIKE ?",
-                new String[]{"%" + name + "%", name},
+                new String[]{"%"+name+"%", name},
                 null, null, null, null);
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
