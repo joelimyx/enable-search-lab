@@ -24,21 +24,22 @@ public class GroceryDatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_PRICE = "PRICE";
     public static final String COL_TYPE = "TYPE";
     public static final String CREATE_TABLE =
-            "CREATE TABLE "+ GROCERY_TABLE_NAME + "("+
-            COL_ID + " INTEGER PRIMARY KEY, "+
-            COL_NAME+ " TEXT, "+
-            COL_DESCRIPTION+" TEXT, "+
-            COL_PRICE+" DOUBLE, "+
-            COL_TYPE+" TEXT)";
+            "CREATE TABLE " + GROCERY_TABLE_NAME + "(" +
+                    COL_ID + " INTEGER PRIMARY KEY, " +
+                    COL_NAME + " TEXT, " +
+                    COL_DESCRIPTION + " TEXT, " +
+                    COL_PRICE + " DOUBLE, " +
+                    COL_TYPE + " TEXT)";
 
-    public static GroceryDatabaseHelper getInstance(Context context){
-        if(mInstance==null){
+    public static GroceryDatabaseHelper getInstance(Context context) {
+        if (mInstance == null) {
             mInstance = new GroceryDatabaseHelper(context.getApplicationContext());
         }
         return mInstance;
     }
+
     private GroceryDatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null,DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
@@ -48,20 +49,20 @@ public class GroceryDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS "+GROCERY_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + GROCERY_TABLE_NAME);
         onCreate(db);
     }
 
-    public List<GroceryItem> getItemAsList(){
+    public List<GroceryItem> getItemAsList() {
         LinkedList<GroceryItem> list = new LinkedList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(GROCERY_TABLE_NAME,
-                        new String[]{COL_NAME,COL_DESCRIPTION},
-                        null,null,null,null,null);
-        if (cursor.moveToFirst()){
-            while (!cursor.isAfterLast()){
+                null, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
                 list.add(new GroceryItem(cursor.getString(cursor.getColumnIndex(COL_NAME)),
-                                        cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION))));
+                        cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION)),
+                        cursor.getString(cursor.getColumnIndex(COL_TYPE))));
                 cursor.moveToNext();
             }
         }
@@ -69,18 +70,19 @@ public class GroceryDatabaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    public List<GroceryItem> searchItemByName(String name){
+    public List<GroceryItem> searchItemByName(String name) {
         LinkedList<GroceryItem> list = new LinkedList<>();
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.query(GROCERY_TABLE_NAME,
                 null,
-                COL_NAME + " LIKE ?",
-                new String[]{"%"+name+"%"},
-                null,null,null,null);
-        if (cursor.moveToFirst()){
-            while (!cursor.isAfterLast()){
+                COL_NAME + " LIKE ? OR " + COL_TYPE + " LIKE ?",
+                new String[]{"%" + name + "%", name},
+                null, null, null, null);
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
                 list.add(new GroceryItem(cursor.getString(cursor.getColumnIndex(COL_NAME)),
-                                        cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION))));
+                        cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION)),
+                        cursor.getString(cursor.getColumnIndex(COL_TYPE))));
                 cursor.moveToNext();
             }
         }

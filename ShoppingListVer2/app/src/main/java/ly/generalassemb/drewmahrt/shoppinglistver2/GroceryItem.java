@@ -7,10 +7,20 @@ package ly.generalassemb.drewmahrt.shoppinglistver2;
 public class GroceryItem {
     private String mName;
     private String mDescription;
+    private String mType;
 
-    public GroceryItem(String name, String description) {
+    public GroceryItem(String name, String description, String type) {
         mName = name;
         mDescription = description;
+        mType = type;
+    }
+
+    public String getType() {
+        return mType;
+    }
+
+    public void setType(String type) {
+        mType = type;
     }
 
     public String getDescription() {
